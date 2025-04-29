@@ -63,10 +63,19 @@ public class MapearIdades {
     private void listando(){
         System.out.println();
         System.out.println("---------------------------------------");
-        System.out.println("Iterando sobre as chaves e valores do HashMap:");
+        System.out.println("Iterando sobre as chaves e valores do HashMap (keySet):");
         for (String nome : mapaIdades.keySet()) {
             int idade = mapaIdades.get(nome);
             System.out.println(nome + " tem " + idade + " anos.");
+        }
+    }
+
+    private void listando2(){
+        System.out.println();
+        System.out.println("---------------------------------------");
+        System.out.println("Iterando sobre as chaves e valores do HashMap (entrySet):");
+        for (var item : mapaIdades.entrySet()) {
+            System.out.println(item.getKey() + " tem " + item.getValue() + " anos");
         }
     }
 
@@ -95,7 +104,7 @@ public class MapearIdades {
         this.confirmandoExistencia("Maria");
         this.localizando("João");
         this.removendo("Pedro");
-        this.listando();
+        this.listando2();
         this.verificandoTamanho();
     }
 }
