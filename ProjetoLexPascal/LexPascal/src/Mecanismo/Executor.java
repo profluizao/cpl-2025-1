@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -155,15 +156,49 @@ public class Executor {
         System.out.println("----------------------------------------");        
     }
 
-    public void AnalisarMontandoTabelaSimbolos(){
-        //AQUI É QUE ENTRA O TRABALHO DE VCS.
-        //1 - Precisa da Tabela de Simbolos do programa.
-        //2 - Precisa da Tabela de Simbolos da linguagem.
-        //3 - Precisa varrer o buffer secundário, para localizar os tokens, definindo o que é cada um dos lexemas.
+   public void AnalisarMontandoTabelaSimbolos(){
+        this.tabelaSimbolosPrograma = new HashMap<>();
+        TabelaSimbolosLinguagem tblSimbolosLinguagem = new TabelaSimbolosLinguagem();
+        for (String texto : this.bufferSecundario) {
+            String chave = texto.toUpperCase();
+            Token valor = null;
+            if (tblSimbolosLinguagem.getTabela().containsKey(texto.toLowerCase())){
+                
+                valor = tblSimbolosLinguagem.getTabela().get(texto.toLowerCase());
+                valor.setToken(texto);
+                
+            }
+            else{
+                if (this.IsNumber(texto)){
+                    valor = new Token(texto, texto, tblSimbolosLinguagem.getNumber(), "Valor Numérico", 0);
+                }
+                else if (this.IsLiteral(texto)){
+                    valor = new Token(texto, texto, tblSimbolosLinguagem.getLiteral(), "Literal", 0);
+                }
+                else if (this.IsCharacter(texto)){
+                    valor = new Token(texto, texto, tblSimbolosLinguagem.getSimbol(), "Caracter Especial", 0);
+                }
+                else if (this.IsIdentifier(texto)){
+                    valor = new Token(texto, texto, tblSimbolosLinguagem.getIdentifier(), "Identificador", 0);
+                }
+                else{
+                    valor = new Token(texto, texto, tblSimbolosLinguagem.getUndefined(), "Não pertence a linguagem", 0);
+                }
+            }
+            this.tabelaSimbolosPrograma.put(chave, valor);
+        }
     }
 
     public void ImprimirTabelaSimbolosPrograma(){
-        //A parte final, na qual vc imprime todas as entradas da Tabela de Simbolos do programa, após o processamento.
+        System.out.println("----------------------------------------");
+        System.out.println("##### Tabela da Análise Léxica: #####");
+        Integer contador = 1;
+        for (Map.Entry<String,Token> pair : this.tabelaSimbolosPrograma.entrySet()) {
+            System.out.printf("%3s", contador.toString());
+            System.out.printf(" | %20s", pair.getKey());
+            System.out.printf(" | %30s \n", pair.getValue().toString());
+            contador++;
+        }
+        System.out.println("----------------------------------------");  
     }
-
 }
